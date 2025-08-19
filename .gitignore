@@ -13,6 +13,7 @@ out/
 # ======================================
 # Local settings and environment configs
 # ======================================
+appsettings.json
 appsettings.*.json
 !appsettings.Development.json 
 
