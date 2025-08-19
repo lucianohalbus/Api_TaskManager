@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/51vMYb6mK4=",
+  "dgSpecHash": "HxcPfdqj7Ww=",
   "success": true,
-  "projectFilePath": "C:\\Users\\lpuze\\Developer\\Api_TaskManager\\Api_TaskManager.csproj",
+  "projectFilePath": "C:\\Users\\lpuze\\developer\\Api_TaskManager\\Api_TaskManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lpuze\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\lpuze\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -1,0 +1,39 @@
+# ======================================
+# Build and temporary files (.NET)
+# ======================================
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+
+# ======================================
+# Local settings and environment configs
+# ======================================
+appsettings.*.json
+!appsettings.Development.json   # keep a clean development version in the repo
+
+# ======================================
+# User / IDE configs
+# ======================================
+.vs/
+.vscode/
+*.user
+*.suo
+*.swp
+*.tmp
+*.dbmdl
+*.bak
+
+# Rider / JetBrains
+.idea/
+
+# ======================================
+# Operating system files
+# ======================================
+.DS_Store
+Thumbs.db
+
