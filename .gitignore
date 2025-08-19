@@ -14,7 +14,7 @@ out/
 # Local settings and environment configs
 # ======================================
 appsettings.*.json
-!appsettings.Development.json   # keep a clean development version in the repo
+!appsettings.Development.json 
 
 # ======================================
 # User / IDE configs
