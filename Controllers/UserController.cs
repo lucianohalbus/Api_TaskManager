@@ -71,13 +71,15 @@ public class UserController : ControllerBase
 
     // POST: api/user
     [HttpPost]
-    public async Task<ActionResult<User>> CreateUser(UserCreateDto dto)
+    public async Task<ActionResult<UserReadDto>> CreateUser(UserCreateDto dto)
     {
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
         var user = new User
         {
             Username = dto.Username,
             Email = dto.Email,
-            PasswordHash = dto.Password
+            PasswordHash = passwordHash
         };
 
         _context.Users.Add(user);
