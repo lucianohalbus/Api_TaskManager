@@ -9,4 +9,7 @@ public class User
     public required string PasswordHash { get; set; }
 
     public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
+
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 }
