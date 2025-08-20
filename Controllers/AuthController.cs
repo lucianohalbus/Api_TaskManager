@@ -30,7 +30,10 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<LoginResponseDto>> Login(LoginDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-        if (user == null) return Unauthorized("User not found");
+        if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+        {
+            throw new UnauthorizedAccessException("Invalid username or password");
+        }
 
         bool passwordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
         if (!passwordValid) return Unauthorized("Invalid password");

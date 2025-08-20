@@ -5,14 +5,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
+using Api_TaskManager.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// JWT config
+// ============================
+// JWT Configuration
+// ============================
 var jwtConfig = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]);
+var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]!);
 
-// Add authentication
+// Add authentication with JWT Bearer
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -31,21 +34,28 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
         ),
-        RoleClaimType = ClaimTypes.Role
+        RoleClaimType = ClaimTypes.Role // Use "Role" claim for role-based authorization
     };
 });
 
-// Add DbContext with connection string
+// ============================
+// Database Context
+// ============================
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
+// ============================
+// Authorization & Controllers
+// ============================
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
-// Add Swagger/OpenAPI
+// ============================
+// Swagger/OpenAPI
+// ============================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -55,14 +65,15 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 
+    // Enable JWT Bearer authentication in Swagger UI
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
-        Description = "Digite: Bearer {seu token JWT}",
+        Description = "Enter: Bearer {your JWT token}",
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
     });
-    
+
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -81,7 +92,14 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Middleware
+// ============================
+// Middlewares Pipeline
+// ============================
+
+// 1) Custom global error handling (must come first)
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
+// 2) Swagger (only in Development mode)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -92,8 +110,15 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// 3) HTTPS redirection
 app.UseHttpsRedirection();
+
+// 4) Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
+
+// 5) Controllers mapping
 app.MapControllers();
+
+// Run the application
 app.Run();
