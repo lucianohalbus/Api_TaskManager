@@ -15,7 +15,7 @@ out/
 # ======================================
 appsettings.json
 appsettings.Production.json
-appsettings.Staging.json 
+appsettings.Staging.json
 
 # ======================================
 # User / IDE configs
