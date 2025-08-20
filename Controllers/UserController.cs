@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Api_TaskManager.Models;
 using Api_TaskManager.Data;
 using Api_TaskManager.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api_TaskManager.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : ControllerBase
@@ -70,6 +72,7 @@ public class UserController : ControllerBase
     }
 
     // POST: api/user
+    [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<UserReadDto>> CreateUser(UserCreateDto dto)
     {
