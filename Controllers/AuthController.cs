@@ -11,7 +11,7 @@ using Api_TaskManager.Dtos;
 
 namespace Api_TaskManager.Controllers;
 
-[Authorize]
+[Authorize(Roles = "User")]
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
@@ -84,12 +84,14 @@ public class AuthController : ControllerBase
         var jwtConfig = _config.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var role = string.IsNullOrEmpty(user.Role) ? "User" : user.Role;
 
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email)
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(ClaimTypes.Role, role)
         };
 
         return new JwtSecurityToken(
