@@ -34,7 +34,9 @@ public class UserController : ControllerBase
                 Id = t.Id,
                 Title = t.Title,
                 Description = t.Description,
-                Completed = t.Completed
+                Completed = t.Completed,
+                UserId = t.UserId,
+                Username = t.User != null ? t.User.Username : string.Empty
             }).ToList()
         });
 
