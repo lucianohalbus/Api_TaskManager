@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api_TaskManager.Models;
 using Api_TaskManager.Data;
+using Api_TaskManager.Dtos;
 
 namespace Api_TaskManager.Controllers;
 
@@ -20,37 +21,92 @@ public class TaskItemController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TaskItem>>> GetTaskItems()
     {
-        return await _context.TaskItems.Include(t => t.User).ToListAsync();
+        var tasks = await _context.TaskItems
+            .Include(t => t.User)
+            .ToListAsync();
+
+        var taskDtos = tasks.Select(t => new TaskItemReadDto
+        {
+            Id = t.Id,
+            Title = t.Title,
+            Description = t.Description,
+            Completed = t.Completed,
+            UserId = t.UserId,
+            Username = t.User.Username // from navigation property
+        }).ToList();
+
+        return Ok(taskDtos);
     }
 
     // GET: api/taskitem/5
     [HttpGet("{id}")]
     public async Task<ActionResult<TaskItem>> GetTaskItem(int id)
     {
-        var task = await _context.TaskItems.Include(t => t.User)
-                                           .FirstOrDefaultAsync(t => t.Id == id);
+        var task = await _context.TaskItems
+            .Include(t => t.User)
+            .FirstOrDefaultAsync(t => t.Id == id);
 
         if (task == null) return NotFound();
-        return task;
+
+        var dto = new TaskItemReadDto
+        {
+            Id = task.Id,
+            Title = task.Title,
+            Description = task.Description,
+            Completed = task.Completed,
+            UserId = task.UserId,
+            Username = task.User.Username
+        };
+
+        return Ok(dto);
     }
 
     // POST: api/taskitem
     [HttpPost]
-    public async Task<ActionResult<TaskItem>> CreateTaskItem(TaskItem taskItem)
+    public async Task<ActionResult<TaskItemReadDto>> CreateTaskItem(TaskItemCreateDto dto)
     {
-        _context.TaskItems.Add(taskItem);
+        var task = new TaskItem
+        {
+            Title = dto.Title,
+            Description = dto.Description,
+            Completed = dto.Completed,
+            UserId = dto.UserId
+        };
+
+        _context.TaskItems.Add(task);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetTaskItem), new { id = taskItem.Id }, taskItem);
+
+        // to return Username into the DTO
+        var user = await _context.Users.FindAsync(dto.UserId);
+
+        var readDto = new TaskItemReadDto
+        {
+            Id = task.Id,
+            Title = task.Title,
+            Description = task.Description,
+            Completed = task.Completed,
+            UserId = task.UserId,
+            Username = user?.Username ?? string.Empty
+        };
+
+        return CreatedAtAction(nameof(GetTaskItem), new { id = task.Id }, readDto);
     }
 
     // PUT: api/taskitem/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTaskItem(int id, TaskItem taskItem)
+    public async Task<IActionResult> UpdateTaskItem(int id, TaskItemCreateDto dto)
     {
-        if (id != taskItem.Id) return BadRequest();
+        var task = await _context.TaskItems.FindAsync(id);
+        if (task == null) return NotFound();
 
-        _context.Entry(taskItem).State = EntityState.Modified;
+        task.Title = dto.Title;
+        task.Description = dto.Description;
+        task.Completed = dto.Completed;
+        task.UserId = dto.UserId;
+
+        _context.Entry(task).State = EntityState.Modified;
         await _context.SaveChangesAsync();
+
         return NoContent();
     }
 
