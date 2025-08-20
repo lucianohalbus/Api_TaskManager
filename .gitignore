@@ -14,8 +14,8 @@ out/
 # Local settings and environment configs
 # ======================================
 appsettings.json
-appsettings.*.json
-!appsettings.Development.json 
+appsettings.Production.json
+appsettings.Staging.json 
 
 # ======================================
 # User / IDE configs
