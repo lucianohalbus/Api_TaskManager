@@ -21,12 +21,19 @@ public class TaskItemController : ControllerBase
         _context = context;
     }
 
-    // GET: api/taskitem
+    // GET: api/taskitem?page=1&pageSize=10
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TaskItem>>> GetTaskItems()
+    public async Task<ActionResult<PagedResultDto<TaskItemReadDto>>> GetTaskItems(int page = 1, int pageSize = 10)
     {
-        var tasks = await _context.TaskItems
-            .Include(t => t.User)
+        if (page <= 0) page = 1;
+        if (pageSize <= 0) pageSize = 10;
+
+        var query = _context.TaskItems.Include(t => t.User);
+        var totalCount = await query.CountAsync();
+
+        var tasks = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
         var taskDtos = tasks.Select(t => new TaskItemReadDto
@@ -36,10 +43,18 @@ public class TaskItemController : ControllerBase
             Description = t.Description,
             Completed = t.Completed,
             UserId = t.UserId,
-            Username = t.User.Username // from navigation property
+            Username = t.User.Username
         }).ToList();
 
-        return Ok(taskDtos);
+        var result = new PagedResultDto<TaskItemReadDto>
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            Items = taskDtos
+        };
+
+        return Ok(result);
     }
 
     // GET: api/taskitem/5

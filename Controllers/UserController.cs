@@ -20,11 +20,23 @@ public class UserController : ControllerBase
         _context = context;
     }
 
-    // GET: api/user
+    // GET: api/user?page=1&pageSize=10
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers()
+    public async Task<ActionResult<PagedResultDto<UserReadDto>>> GetUsers(
+        int page = 1, 
+        int pageSize = 10)
     {
-        var users = await _context.Users.Include(u => u.TaskItems).ToListAsync();
+        if (page <= 0) page = 1;
+        if (pageSize <= 0) pageSize = 10;
+
+        var query = _context.Users.Include(u => u.TaskItems);
+
+        var totalCount = await query.CountAsync();
+
+        var users = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
         var userDtos = users.Select(u => new UserReadDto
         {
@@ -40,9 +52,17 @@ public class UserController : ControllerBase
                 UserId = t.UserId,
                 Username = t.User != null ? t.User.Username : string.Empty
             }).ToList()
-        });
+        }).ToList();
 
-        return Ok(userDtos);
+        var result = new PagedResultDto<UserReadDto>
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            Items = userDtos
+        };
+
+        return Ok(result);
     }
 
     // GET: api/user/5
