@@ -4,6 +4,8 @@ using Api_TaskManager.Models;
 using Api_TaskManager.Data;
 using Api_TaskManager.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Api_TaskManager.Extensions;
 
 namespace Api_TaskManager.Controllers;
 
@@ -67,19 +69,22 @@ public class TaskItemController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TaskItemReadDto>> CreateTaskItem(TaskItemCreateDto dto)
     {
+        // Get UserId from JWT
+        var userId = User.GetUserId();
+        if (userId == null) return Unauthorized();
+
         var task = new TaskItem
         {
             Title = dto.Title,
             Description = dto.Description,
             Completed = dto.Completed,
-            UserId = dto.UserId
+            UserId = userId.Value
         };
 
         _context.TaskItems.Add(task);
         await _context.SaveChangesAsync();
 
-        // to return Username into the DTO
-        var user = await _context.Users.FindAsync(dto.UserId);
+        var user = await _context.Users.FindAsync(userId.Value);
 
         var readDto = new TaskItemReadDto
         {
@@ -98,13 +103,18 @@ public class TaskItemController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTaskItem(int id, TaskItemCreateDto dto)
     {
+        var userId = User.GetUserId();
+        if (userId == null) return Unauthorized();
+
         var task = await _context.TaskItems.FindAsync(id);
         if (task == null) return NotFound();
+
+        // Ensure the logged user owns the task
+        if (task.UserId != userId.Value) return Forbid();
 
         task.Title = dto.Title;
         task.Description = dto.Description;
         task.Completed = dto.Completed;
-        task.UserId = dto.UserId;
 
         _context.Entry(task).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -116,8 +126,14 @@ public class TaskItemController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTaskItem(int id)
     {
+        var userId = User.GetUserId();
+        if (userId == null) return Unauthorized();
+
         var task = await _context.TaskItems.FindAsync(id);
         if (task == null) return NotFound();
+
+        // Ensure the logged user owns the task
+        if (task.UserId != userId.Value) return Forbid();
 
         _context.TaskItems.Remove(task);
         await _context.SaveChangesAsync();

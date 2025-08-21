@@ -1,6 +1,13 @@
-namespace Api_TaskManager.Dtos;
+using System.ComponentModel.DataAnnotations;
 
-public class TokenRequestDto
+namespace Api_TaskManager.Dtos
 {
-    public string RefreshToken { get; set; } = string.Empty;
+    public class TokenRequestDto
+    {
+        [Required]
+        public string RefreshToken { get; set; } = string.Empty;
+    }  
 }
+
+
+
