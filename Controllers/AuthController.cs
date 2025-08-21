@@ -11,7 +11,7 @@ using Api_TaskManager.Dtos;
 
 namespace Api_TaskManager.Controllers;
 
-[Authorize(Roles = "User")]
+[Authorize(Policy = "UserOrAdmin")]
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
@@ -31,12 +31,11 @@ public class AuthController : ControllerBase
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-        {
             throw new UnauthorizedAccessException("Invalid username or password");
-        }
 
         bool passwordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
-        if (!passwordValid) return Unauthorized("Invalid password");
+        if (!passwordValid)
+            return Unauthorized("Invalid password");
 
         var token = GenerateJwtToken(user);
 

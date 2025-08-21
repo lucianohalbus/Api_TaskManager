@@ -9,7 +9,7 @@ using Api_TaskManager.Extensions;
 
 namespace Api_TaskManager.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = "UserOrAdmin")]
 [ApiController]
 [Route("api/[controller]")]
 public class TaskItemController : ControllerBase
@@ -109,8 +109,10 @@ public class TaskItemController : ControllerBase
         var task = await _context.TaskItems.FindAsync(id);
         if (task == null) return NotFound();
 
-        // Ensure the logged user owns the task
-        if (task.UserId != userId.Value) return Forbid();
+        // Allow Admin to edit any task
+        var isAdmin = User.IsInRole("Admin");
+        if (!isAdmin && task.UserId != userId.Value)
+            return Forbid();
 
         task.Title = dto.Title;
         task.Description = dto.Description;
@@ -132,11 +134,14 @@ public class TaskItemController : ControllerBase
         var task = await _context.TaskItems.FindAsync(id);
         if (task == null) return NotFound();
 
-        // Ensure the logged user owns the task
-        if (task.UserId != userId.Value) return Forbid();
+        // Allow Admin to delete any task
+        var isAdmin = User.IsInRole("Admin");
+        if (!isAdmin && task.UserId != userId.Value)
+            return Forbid();
 
         _context.TaskItems.Remove(task);
         await _context.SaveChangesAsync();
         return NoContent();
     }
+
 }

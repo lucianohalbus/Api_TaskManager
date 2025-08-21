@@ -9,13 +9,9 @@ using Api_TaskManager.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ============================
-// JWT Configuration
-// ============================
 var jwtConfig = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]!);
 
-// Add authentication with JWT Bearer
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -34,13 +30,11 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
         ),
-        RoleClaimType = ClaimTypes.Role // Use "Role" claim for role-based authorization
+        RoleClaimType = ClaimTypes.Role
     };
 });
 
-// ============================
-// Database Context
-// ============================
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
@@ -48,13 +42,24 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 // ============================
-// Authorization & Controllers
+// Authorization Policies
 // ============================
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireUser", policy =>
+        policy.RequireRole("User"));
+
+    options.AddPolicy("RequireAdmin", policy =>
+        policy.RequireRole("Admin"));
+
+    options.AddPolicy("UserOrAdmin", policy =>
+        policy.RequireRole("User", "Admin"));
+});
+
 builder.Services.AddControllers();
 
 // ============================
-// Swagger/OpenAPI
+// Swagger / OpenAPI
 // ============================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -93,13 +98,11 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // ============================
-// Middlewares Pipeline
+// Middleware Pipeline
 // ============================
 
-// 1) Custom global error handling (must come first)
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-// 2) Swagger (only in Development mode)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -110,15 +113,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// 3) HTTPS redirection
 app.UseHttpsRedirection();
-
-// 4) Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-// 5) Controllers mapping
 app.MapControllers();
-
-// Run the application
 app.Run();

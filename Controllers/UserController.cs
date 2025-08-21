@@ -4,10 +4,11 @@ using Api_TaskManager.Models;
 using Api_TaskManager.Data;
 using Api_TaskManager.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using Api_TaskManager.Extensions;
 
 namespace Api_TaskManager.Controllers;
 
-[Authorize(Roles = "User, Admin")]
+[Authorize(Policy = "UserOrAdmin")]
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : ControllerBase
@@ -25,7 +26,6 @@ public class UserController : ControllerBase
     {
         var users = await _context.Users.Include(u => u.TaskItems).ToListAsync();
 
-        // Converting User to DTOs
         var userDtos = users.Select(u => new UserReadDto
         {
             Id = u.Id,
@@ -101,12 +101,27 @@ public class UserController : ControllerBase
 
     // PUT: api/user/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateUser(int id, User user)
+    public async Task<IActionResult> UpdateUser(int id, User updateUser)
     {
-        if (id != user.Id) return BadRequest();
+        var userId = User.GetUserId();
+        if (userId == null) return Unauthorized();
 
+        var user = await _context.Users.FindAsync(id);
+        if (user == null) return NotFound();
+
+        var isAdmin = User.IsInRole("Admin");
+        if (!isAdmin && user.Id != userId.Value)
+            return Forbid();
+
+        user.Username = updateUser.Username;
+        user.Email = updateUser.Email;
+
+        if (!string.IsNullOrEmpty(updateUser.PasswordHash))
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updateUser.PasswordHash);
+        
         _context.Entry(user).State = EntityState.Modified;
         await _context.SaveChangesAsync();
+
         return NoContent();
     }
 
@@ -114,8 +129,19 @@ public class UserController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
+        var userId = User.GetUserId();
+        if (userId == null) return Unauthorized();
+
         var user = await _context.Users.FindAsync(id);
         if (user == null) return NotFound();
+
+        var isAdmin = User.IsInRole("Admin");
+
+        if (user.Role == "Admin")
+            return Forbid(); 
+
+        if (!isAdmin && user.Id != userId.Value)
+            return Forbid();
 
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
