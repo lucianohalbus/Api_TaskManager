@@ -12,8 +12,10 @@ namespace Api_TaskManager.Extensions
         /// Get the UserId from JWT claims.
         /// Returns null if claim is missing or invalid.
         /// </summary>
-        public static int? GetUserId(this ClaimsPrincipal user)
+        public static int? GetUserId(this ClaimsPrincipal? user)
         {
+            if (user == null) return null;
+
             var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
             if (userIdClaim == null) return null;
@@ -22,3 +24,6 @@ namespace Api_TaskManager.Extensions
         }
     }
 }
+
+
+
