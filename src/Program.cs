@@ -6,11 +6,19 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using Api_TaskManager.Middlewares;
+using System.Runtime.CompilerServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtConfig = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]!);
+var jwtKey = jwtConfig["Key"];
+if (string.IsNullOrEmpty(jwtKey))
+{
+    // Para testes - usar uma chave padrão
+    jwtKey = "ThisIsASecretKeyForTestingPurposesOnly123456789";
+}
+
+var key = Encoding.UTF8.GetBytes(jwtKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -34,12 +42,14 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    )
-);
+if (builder.Environment.EnvironmentName != "Testing")
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection")
+        )
+    );
+}
 
 // ============================
 // Authorization Policies
@@ -118,3 +128,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+public partial class Program { }
