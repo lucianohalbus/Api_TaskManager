@@ -24,12 +24,13 @@ tests/*/TestResults/
 # ======================================
 # Local settings and environment configs
 # ======================================
+# Ignore ALL appsettings with sensitive data:
 src/appsettings.json
 src/appsettings.Production.json
 src/appsettings.Staging.json
 src/appsettings.Development.json
 
-# Keep template files
+# Keep template files - these SHOULD be committed:
 !src/appsettings.Template.json
 !src/appsettings.Example.json
 
@@ -88,12 +89,6 @@ Desktop.ini
 .env.local
 .env.production
 .env.staging
-
-# ======================================
-# Solution-level files (optional)
-# ======================================
-# Uncomment if you're not using a .sln file
-# *.sln.docstates
 
 # ======================================
 # Backup files
