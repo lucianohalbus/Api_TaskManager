@@ -1,0 +1,111 @@
+# ======================================
+# Build and temporary files (.NET)
+# ======================================
+src/bin/
+src/obj/
+tests/*/bin/
+tests/*/obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+
+# ======================================
+# Test Results
+# ======================================
+TestResults/
+tests/*/TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# ======================================
+# Local settings and environment configs
+# ======================================
+src/appsettings.json
+src/appsettings.Production.json
+src/appsettings.Staging.json
+src/appsettings.Development.json
+
+# Keep template files
+!src/appsettings.Template.json
+!src/appsettings.Example.json
+
+# ======================================
+# User / IDE configs
+# ======================================
+.vs/
+.vscode/
+*.user
+*.suo
+*.swp
+*.tmp
+*.dbmdl
+*.bak
+
+# Rider / JetBrains
+.idea/
+
+# ======================================
+# Package Management
+# ======================================
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ======================================
+# Database files (if using SQLite)
+# ======================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ======================================
+# Logs and temp files
+# ======================================
+logs/
+*.log
+temp/
+tmp/
+
+# ======================================
+# Operating system files
+# ======================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ======================================
+# Environment variables
+# ======================================
+.env
+.env.local
+.env.production
+.env.staging
+
+# ======================================
+# Solution-level files (optional)
+# ======================================
+# Uncomment if you're not using a .sln file
+# *.sln.docstates
+
+# ======================================
+# Backup files
+# ======================================
+*.bak
+*.tmp
+*~
+
+# ======================================
+# Node.js (if using any frontend tooling)
+# ======================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

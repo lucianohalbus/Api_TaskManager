@@ -15,12 +15,10 @@ namespace UnitTests
 {
     public class UserControllerUnitTests
     {
-        private readonly DbContextOptions<ApplicationDbContext> _dbOptions;
-
-        public UserControllerUnitTests()
+        private DbContextOptions<ApplicationDbContext> CreateNewContextOptions()
         {
-            _dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "UserControllerTests")
+            return new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // ← Banco único por teste
                 .Options;
         }
 
@@ -51,7 +49,7 @@ namespace UnitTests
         [Fact]
         public async Task GetUsers_ReturnsPagedResult()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             context.Users.Add(CreateTestUser(1, "user1", "user1@test.com"));
             context.Users.Add(CreateTestUser(2, "user2", "user2@test.com"));
             await context.SaveChangesAsync();
@@ -68,7 +66,7 @@ namespace UnitTests
         [Fact]
         public async Task GetUser_ReturnsUser_WhenExists()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var user = CreateTestUser(3, "user3", "user3@test.com");
             context.Users.Add(user);
             await context.SaveChangesAsync();
@@ -84,7 +82,7 @@ namespace UnitTests
         [Fact]
         public async Task GetUser_ReturnsNotFound_WhenUserDoesNotExist()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var controller = new UserController(context);
 
             var result = await controller.GetUser(999);
@@ -95,7 +93,7 @@ namespace UnitTests
         [Fact]
         public async Task CreateUser_ReturnsCreatedUser()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var controller = new UserController(context);
 
             var dto = new UserCreateDto
@@ -116,7 +114,7 @@ namespace UnitTests
         [Fact]
         public async Task UpdateUser_ReturnsNoContent_WhenSuccessful()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var user = CreateTestUser(10, "oldname", "old@test.com");
             context.Users.Add(user);
             await context.SaveChangesAsync();
@@ -142,7 +140,7 @@ namespace UnitTests
         [Fact]
         public async Task UpdateUser_ReturnsUnauthorized_WhenNoUserLoggedIn()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var controller = new UserController(context);
 
             var updatedUser = CreateTestUser(20, "nouser", "nouser@test.com");
@@ -155,7 +153,7 @@ namespace UnitTests
         [Fact]
         public async Task UpdateUser_ReturnsNotFound_WhenUserDoesNotExist()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var controller = new UserController(context)
             {
                 ControllerContext = new ControllerContext
@@ -177,7 +175,7 @@ namespace UnitTests
         [Fact]
         public async Task UpdateUser_ReturnsForbid_WhenUserTriesToUpdateAnotherUser_AndNotAdmin()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var user = CreateTestUser(50, "target", "target@test.com");
             context.Users.Add(user);
             await context.SaveChangesAsync();
@@ -203,7 +201,7 @@ namespace UnitTests
         [Fact]
         public async Task DeleteUser_ReturnsNoContent_WhenSuccessful()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var user = CreateTestUser(30, "todelete", "delete@test.com");
             context.Users.Add(user);
             await context.SaveChangesAsync();
@@ -227,7 +225,7 @@ namespace UnitTests
         [Fact]
         public async Task DeleteUser_ReturnsUnauthorized_WhenNoUserLoggedIn()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var user = CreateTestUser(40, "unauth", "unauth@test.com");
             context.Users.Add(user);
             await context.SaveChangesAsync();
@@ -242,7 +240,7 @@ namespace UnitTests
         [Fact]
         public async Task DeleteUser_ReturnsNotFound_WhenUserDoesNotExist()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var controller = new UserController(context)
             {
                 ControllerContext = new ControllerContext
@@ -262,7 +260,7 @@ namespace UnitTests
         [Fact]
         public async Task DeleteUser_ReturnsForbid_WhenDeletingAdmin()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var admin = CreateTestUser(60, "admin", "admin@test.com", role: "Admin");
             context.Users.Add(admin);
             await context.SaveChangesAsync();
@@ -286,7 +284,7 @@ namespace UnitTests
         [Fact]
         public async Task DeleteUser_ReturnsForbid_WhenUserTriesToDeleteAnotherUser_AndNotAdmin()
         {
-            using var context = new ApplicationDbContext(_dbOptions);
+            using var context = new ApplicationDbContext(CreateNewContextOptions());
             var target = CreateTestUser(70, "victim", "victim@test.com");
             context.Users.Add(target);
             await context.SaveChangesAsync();
