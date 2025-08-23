@@ -1,10 +1,8 @@
 # ======================================
 # Build and temporary files (.NET)
 # ======================================
-src/bin/
-src/obj/
-tests/*/bin/
-tests/*/obj/
+bin/
+obj/
 out/
 *.exe
 *.dll
