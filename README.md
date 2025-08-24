@@ -12,6 +12,17 @@ REST API for task management with JWT authentication.
 - BCrypt for password hashing
 - xUnit for testing
 
+### Version History
+
+- **v1.0.0** - Initial release
+  - User management with JWT authentication
+  - Task management (CRUD operations)
+  - Role-based authorization (User/Admin)
+  - Unit and integration tests
+  - API documentation with Swagger
+
+See the [releases page](https://github.com/lucianohalbus/Api_TaskManager/releases) for detailed changelogs.
+
 ## Setup
 
 ### 1. Configure settings files
