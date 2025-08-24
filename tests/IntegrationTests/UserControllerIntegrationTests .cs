@@ -126,7 +126,7 @@ namespace Api_TaskManager.Tests.Integration
             var response = await _client.PostAsync("/api/user", content);
 
             // Assert - With error middleware, validation errors return BadRequest or InternalServerError
-            Assert.True(response.StatusCode == HttpStatusCode.BadRequest || 
+            Assert.True(response.StatusCode == HttpStatusCode.BadRequest ||
                        response.StatusCode == HttpStatusCode.InternalServerError);
         }
 
@@ -173,7 +173,7 @@ namespace Api_TaskManager.Tests.Integration
             var response = await _client.GetAsync($"/api/user/{userId}");
 
             // Assert - With middleware, might return NotFound even for existing users
-            Assert.True(response.StatusCode == HttpStatusCode.OK || 
+            Assert.True(response.StatusCode == HttpStatusCode.OK ||
                        response.StatusCode == HttpStatusCode.NotFound ||
                        response.StatusCode == HttpStatusCode.InternalServerError);
 
@@ -197,7 +197,7 @@ namespace Api_TaskManager.Tests.Integration
             var response = await _client.GetAsync("/api/user/999");
 
             // Assert - With error middleware, NotFound might be converted to InternalServerError
-            Assert.True(response.StatusCode == HttpStatusCode.NotFound || 
+            Assert.True(response.StatusCode == HttpStatusCode.NotFound ||
                        response.StatusCode == HttpStatusCode.InternalServerError);
         }
 
@@ -222,7 +222,7 @@ namespace Api_TaskManager.Tests.Integration
             var response = await _client.PutAsync($"/api/user/{userId}", content);
 
             // Assert - NotFound suggests user lookup is failing, let's accept that too
-            Assert.True(response.StatusCode == HttpStatusCode.NoContent || 
+            Assert.True(response.StatusCode == HttpStatusCode.NoContent ||
                        response.StatusCode == HttpStatusCode.NotFound ||
                        response.StatusCode == HttpStatusCode.InternalServerError);
         }
@@ -263,7 +263,7 @@ namespace Api_TaskManager.Tests.Integration
             var response = await _client.DeleteAsync($"/api/user/{userId}");
 
             // Assert - Accept success or error since middleware might intervene
-            Assert.True(response.StatusCode == HttpStatusCode.NoContent || 
+            Assert.True(response.StatusCode == HttpStatusCode.NoContent ||
                        (int)response.StatusCode >= 400);
         }
 
@@ -362,42 +362,6 @@ namespace Api_TaskManager.Tests.Integration
             _client.DefaultRequestHeaders.Remove("X-Test-Role");
             _client.DefaultRequestHeaders.Add("X-Test-UserId", userId.ToString());
             _client.DefaultRequestHeaders.Add("X-Test-Role", role);
-        }
-    }
-
-    // Test authentication handler for integration tests
-    public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
-    {
-        public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder)
-            : base(options, logger, encoder)
-        {
-        }
-
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-        {
-            var authHeader = Request.Headers["Authorization"];
-            if (authHeader.Count == 0)
-            {
-                return Task.FromResult(AuthenticateResult.Fail("No authorization header"));
-            }
-
-            var userIdHeader = Request.Headers["X-Test-UserId"];
-            var roleHeader = Request.Headers["X-Test-Role"];
-
-            var userId = userIdHeader.Count > 0 ? userIdHeader[0] ?? "1" : "1";
-            var role = roleHeader.Count > 0 ? roleHeader[0] ?? "User" : "User";
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Role, role)
-            };
-
-            var identity = new ClaimsIdentity(claims, "Test");
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, "Test");
-
-            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
     }
 }
