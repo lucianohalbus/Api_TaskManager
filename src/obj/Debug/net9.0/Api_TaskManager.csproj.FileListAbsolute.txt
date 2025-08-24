@@ -1,5 +1,3 @@
-C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\bin\Debug\net9.0\appsettings.Development.json
-C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\bin\Debug\net9.0\appsettings.json
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\bin\Debug\net9.0\Api_TaskManager.staticwebassets.endpoints.json
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\bin\Debug\net9.0\Api_TaskManager.exe
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\bin\Debug\net9.0\Api_TaskManager.deps.json
@@ -169,3 +167,5 @@ C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\obj\Debug\ne
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\obj\Debug\net9.0\Api_TaskManager.pdb
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\obj\Debug\net9.0\Api_TaskManager.genruntimeconfig.cache
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\obj\Debug\net9.0\ref\Api_TaskManager.dll
+C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\bin\Debug\net9.0\appsettings.Development.Template.json
+C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\src\bin\Debug\net9.0\appsettings.Template.json

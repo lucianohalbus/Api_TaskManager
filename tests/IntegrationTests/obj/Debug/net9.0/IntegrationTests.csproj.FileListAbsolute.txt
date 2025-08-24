@@ -1,8 +1,6 @@
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\testhost.dll
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\Api_TaskManager.deps.json
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\Api_TaskManager.runtimeconfig.json
-C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\appsettings.Development.json
-C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\appsettings.json
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\Api_TaskManager.staticwebassets.endpoints.json
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\Api_TaskManager.exe
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\testhost.exe
@@ -461,3 +459,5 @@ C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integratio
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\obj\Debug\net9.0\IntegrationTests.pdb
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\obj\Debug\net9.0\IntegrationTests.genruntimeconfig.cache
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\obj\Debug\net9.0\ref\IntegrationTests.dll
+C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\appsettings.Development.Template.json
+C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\integrationtests\bin\Debug\net9.0\appsettings.Template.json

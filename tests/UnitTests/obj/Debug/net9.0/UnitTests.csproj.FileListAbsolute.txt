@@ -3,7 +3,6 @@ C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\xunit.abstractions.dll
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\Api_TaskManager.deps.json
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\Api_TaskManager.runtimeconfig.json
-C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\Api_TaskManager.staticwebassets.endpoints.json
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\Api_TaskManager.exe
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\testhost.exe
@@ -162,4 +161,5 @@ C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\obj\Debug\net9.0\UnitTests.pdb
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\obj\Debug\net9.0\UnitTests.genruntimeconfig.cache
 C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\obj\Debug\net9.0\ref\UnitTests.dll
-C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\appsettings.json
+C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\appsettings.Development.Template.json
+C:\Users\lpuze\Developer\crudExample\Api_AspNet\Api_TaskManager\tests\unittests\bin\Debug\net9.0\appsettings.Template.json
